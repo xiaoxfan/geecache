@@ -36,10 +36,7 @@ func NewCache(maxBytes int64, onEvicted func(key string, value Value)) *Cache {
 
 // 获取元素
 func (c *Cache) Get(key string) (value Value, ok bool) {
-	var (
-		ele *list.Element
-	)
-	if ele, ok = c.cache[key]; ok {
+	if ele, ok := c.cache[key]; ok {
 		c.ll.MoveToBack(ele) // 最近访问的元素移动到队尾
 		kv := ele.Value.(*entry)
 		return kv.value, ok
@@ -49,10 +46,7 @@ func (c *Cache) Get(key string) (value Value, ok bool) {
 
 // 删除最老的元素 即队列头的元素
 func (c *Cache) removeOldest() {
-	var (
-		ele *list.Element
-	)
-	if ele = c.ll.Front(); ele != nil {
+	if ele := c.ll.Front(); ele != nil {
 		c.ll.Remove(ele) // 双向列表删除元素
 		kv := ele.Value.(*entry)
 		delete(c.cache, kv.key)                                // cache删除元素
