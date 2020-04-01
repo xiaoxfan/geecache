@@ -6,7 +6,7 @@ import (
 )
 
 type cache struct {
-	sync.RWMutex
+	sync.Mutex
 	lru        *lru.Cache
 	cacheBytes int64
 }
@@ -20,8 +20,8 @@ func (c *cache) add(key string, value ByteView) {
 	c.lru.Add(key, value)
 }
 func (c *cache) get(key string) (value ByteView, ok bool) {
-	c.RLock()
-	defer c.RUnlock()
+	c.Lock()
+	defer c.Unlock()
 	if c.lru == nil {
 		return
 	}
